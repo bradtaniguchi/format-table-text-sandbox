@@ -1,5 +1,11 @@
+const { formatTextToTable } = require('./index');
+
 describe('formatTextToTable', () => {
-  test.todo('returns string');
+  test('is defined', () => {
+    expect(formatTextToTable).toBeTruthy();
+    expect(typeof formatTextToTable).toEqual('function');
+  });
+  test('returns string', () => expect(formatTextToTable([])).toEqual(''));
   test.todo('given empty array returns empty string');
   test.todo('given 2d empty array, returns empty string');
   test.todo('given 2d empty array, with seperate defined headers, returns headers');

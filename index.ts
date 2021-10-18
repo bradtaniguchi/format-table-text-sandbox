@@ -29,4 +29,4 @@ type FormatOptions = {
 /**
  * Formats text into a table object.
  */
-const formatTextToTable = (data: UnformattedData, options?: FormatOptions) => '';
+export const formatTextToTable = (data: UnformattedData, options?: FormatOptions) => '';
