@@ -1,0 +1,17 @@
+{
+  "name": "format-table-text",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@types/jest": "^27.0.2",
+    "jest": "^27.3.0",
+    "ts-jest": "^27.0.7"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
