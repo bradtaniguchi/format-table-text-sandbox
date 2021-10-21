@@ -14,17 +14,18 @@ type FormatOptions = {
    * rather than passing them in as the first row of
    * unformatted text.
    */
-  headers?: any[],
+  headers?: any[];
   /**
    * The column delimiter character(s), defaults to `|`.
    * This character(s) is automatically padded with spaces
    * on either side automatically.
    */
-  columnDelimiter?: string,
+  columnDelimiter?: string;
   /**
    * The row delimiter character(s), defaults to `-`.
+   * Only used between the header, and the rows of data.
    */
-  rowDelimiter?: string,
+  rowDelimiter?: string;
 };
 /**
  * Formats text into a table object.
@@ -37,13 +38,14 @@ export const formatTextToTable = (
   const rows = data;
   const toStr = (val: any) => "" + val;
   const headers = options?.headers || data[0] || [];
+  const hasInferredHeaders = !options?.headers;
   const columnDelimiter = options?.columnDelimiter || "|";
   const rowDelimiter = options?.rowDelimiter || "-";
 
   const baseColumnWidths = headers.map((header) => toStr(header).length);
   const columnWidths = rows.reduce((acc, row) => {
     row.forEach((column, index) => {
-      const currentColumnLength = toStr(column).length
+      const currentColumnLength = toStr(column).length;
       if (currentColumnLength > acc[index]) {
         acc[index] = currentColumnLength;
       }
@@ -51,11 +53,24 @@ export const formatTextToTable = (
     return acc;
   }, baseColumnWidths) as number[];
 
-  const dataStr = rows
-    .map((row) =>
-      row.map((column, index) => toStr(column).padEnd(columnWidths[index], " ")).join(` ${columnDelimiter} `)
-    );
-  const headersStr = headers.join(` ${columnDelimiter} `);
-  
-  return [headersStr, ...dataStr].filter((_ ) =>_).join('\n');
+  const rowSeperatorStr = columnWidths.length
+    ? new Array(
+        // **note** we add an extra one for the space seperation applied
+        // to each column.
+        columnWidths.reduce(
+          (acc, num, index) => acc + num + 2 + columnDelimiter.length
+        )
+      )
+        .fill(rowDelimiter)
+        .join("")
+    : "";
+
+  const dataStr = rows.map((row) =>
+    row
+      .map((column, index) => toStr(column).padEnd(columnWidths[index], " "))
+      .join(` ${columnDelimiter} `)
+  );
+  const headersStr = headers.map((header, index) => header.padEnd(columnWidths[index])).join(` ${columnDelimiter} `);
+
+  return [headersStr, rowSeperatorStr, ...(hasInferredHeaders ? dataStr.slice(1) : dataStr)].filter((_) => _).join("\n");
 };
