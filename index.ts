@@ -58,7 +58,7 @@ export const formatTextToTable = (
         // **note** we add an extra one for the space seperation applied
         // to each column.
         columnWidths.reduce(
-          (acc, num, index) => acc + num + 2 + columnDelimiter.length
+          (acc, num) => acc + num + 2 + columnDelimiter.length
         )
       )
         .fill(rowDelimiter)
@@ -70,7 +70,15 @@ export const formatTextToTable = (
       .map((column, index) => toStr(column).padEnd(columnWidths[index], " "))
       .join(` ${columnDelimiter} `)
   );
-  const headersStr = headers.map((header, index) => header.padEnd(columnWidths[index])).join(` ${columnDelimiter} `);
+  const headersStr = headers
+    .map((header, index) => header.padEnd(columnWidths[index]))
+    .join(` ${columnDelimiter} `);
 
-  return [headersStr, rowSeperatorStr, ...(hasInferredHeaders ? dataStr.slice(1) : dataStr)].filter((_) => _).join("\n");
+  return [
+    headersStr,
+    rowSeperatorStr,
+    ...(hasInferredHeaders ? dataStr.slice(1) : dataStr),
+  ]
+    .filter((_) => _)
+    .join("\n");
 };
